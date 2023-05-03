@@ -14,7 +14,29 @@ public class VideoGameDb extends Simulation {
 
     private HttpProtocolBuilder httpProtocol = http
             .baseUrl("https://videogamedb.uk/api")
-            .acceptHeader("application/json");
+            .acceptHeader("application/json")
+            .contentTypeHeader("application/json");
+
+    private static ChainBuilder authenticate =
+            exec(http("Authenticate")
+                    .post("/authenticate")
+                    .body(StringBody("{\n" +
+                                        "  \"password\": \"admin\",\n" +
+                                        "  \"username\": \"admin\"\n" +
+                                        "}"))
+                    .check(jmesPath("token").saveAs("jwt_token")));
+
+    private static ChainBuilder createNewGame =
+            exec(http("Create new game")
+                    .post("/videogame")
+                    .header("Authorization","Bearer #{jwt_token}")
+                    .body(StringBody("{\n" +
+                                        "  \"category\": \"Platform\",\n" +
+                                        "  \"name\": \"Mario\",\n" +
+                                        "  \"rating\": \"Mature\",\n" +
+                                        "  \"releaseDate\": \"2012-05-04\",\n" +
+                                        "  \"reviewScore\": 85\n" +
+                                        "}")));
 
     private static ChainBuilder getAllVideoGames =
             repeat(3).on(
@@ -32,14 +54,8 @@ public class VideoGameDb extends Simulation {
 
 
     private ScenarioBuilder scn = scenario("Video Game Db - Section 5 code")
-            .exec(getAllVideoGames)
-            .pause(5)
-            .exec(getSpecificVideoGame)
-            .pause(5)
-            .repeat(2).on(
-                exec(getAllVideoGames)
-            );
-
+            .exec(authenticate)
+            .exec(createNewGame);
 
     {
         setUp(
