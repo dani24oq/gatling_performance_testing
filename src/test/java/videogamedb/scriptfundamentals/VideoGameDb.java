@@ -6,6 +6,7 @@ import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.*;
 
 import java.time.Duration;
+import java.util.List;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
@@ -17,21 +18,22 @@ public class VideoGameDb extends Simulation {
 
     private ScenarioBuilder scn = scenario("Video Game Db - Section 5 code")
 
-            .exec(http("Get all video games - 1st call")
-                    .get("/videogame")
-                    .check(status().is(200)))
-            .pause(5)
-
             .exec(http("Get specific game")
                     .get("/videogame/1")
-                    .check(status().in(200,201,202)))
+                    .check(status().in(200,201,202))
+                    .check(jmesPath("name").is("Resident Evil 4")))
             .pause(1, 10)
 
             .exec(http("Get all video games - 2nd call")
                     .get("/videogame")
                     .check(status().not(404),
-                            status().not(500)))
-            .pause(Duration.ofMillis(4000));
+                            status().not(500))
+                    .check(jmesPath("[1].id").saveAs("gameId")))
+            .pause(Duration.ofMillis(4000))
+
+            .exec(http("Get a specific game with id - #{gameId}")
+                    .get("/videogame/#{gameId}")
+                    .check(jmesPath("name").is("Gran Turismo 3")));
 
     {
         setUp(
