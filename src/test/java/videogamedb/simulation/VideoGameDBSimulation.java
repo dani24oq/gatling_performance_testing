@@ -23,16 +23,20 @@ public class VideoGameDBSimulation extends Simulation {
                     .get("/videogame/2"));
 
     private ScenarioBuilder scn = scenario("Video game db - Section 7 code")
-            .exec(getAllVideoGames)
-            .pause(5)
-            .exec(getSpecificGame)
-            .pause(5)
-            .exec(getAllVideoGames);
+            .forever().on(
+                exec(getAllVideoGames)
+                .pause(5)
+                .exec(getSpecificGame)
+                .pause(5)
+                .exec(getAllVideoGames)
+            );
+
 
     {
         setUp(scn.injectOpen(
                 nothingFor(5),
-                rampUsersPerSec(1).to(5).during(20)
-        ).protocols(httpProtocol));
+                atOnceUsers(10),
+                rampUsers(20).during(20)
+        ).protocols(httpProtocol)).maxDuration(60);
     }
 }
