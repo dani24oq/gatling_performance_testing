@@ -8,7 +8,7 @@ import io.gatling.javaapi.http.*;
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
-public class VideoGameDBSimulation extends Simulation {
+public class VideoGameDbSimulations extends Simulation {
 
     private HttpProtocolBuilder httpProtocol = http
             .baseUrl("https://videogamedb.uk/api")
