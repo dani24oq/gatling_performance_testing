@@ -14,6 +14,17 @@ public class VideoGameDbSimulations extends Simulation {
             .baseUrl("https://videogamedb.uk/api")
             .acceptHeader("application/json");
 
+    private static final int USER_COUNT = Integer.parseInt(System.getProperty("USERS","5"));
+    private static final int RAMP_DURATION = Integer.parseInt(System.getProperty("RAMP_DURATION","10"));
+    private static final int TEST_DURATION = Integer.parseInt(System.getProperty("TEST_DURATION","20"));
+
+    @Override
+    public void before(){
+        System.out.printf("Running test with %d users%n", USER_COUNT);
+        System.out.printf("Ramping users over %d seconds%n", RAMP_DURATION);
+        System.out.printf("Total test duration %d seconds%n", TEST_DURATION);
+    }
+
     private static ChainBuilder getAllVideoGames =
             exec(http("Get all video games")
                     .get("/videogame"));
@@ -35,8 +46,7 @@ public class VideoGameDbSimulations extends Simulation {
     {
         setUp(scn.injectOpen(
                 nothingFor(5),
-                atOnceUsers(10),
-                rampUsers(20).during(20)
-        ).protocols(httpProtocol)).maxDuration(60);
+                rampUsers(USER_COUNT).during(RAMP_DURATION)
+        ).protocols(httpProtocol)).maxDuration(TEST_DURATION);
     }
 }
