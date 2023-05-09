@@ -1,15 +1,12 @@
 package acetoys;
 
-import java.time.Duration;
-import java.util.*;
-
+import acetoys.pageobjects.Category;
+import acetoys.pageobjects.StaticPages;
 import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.*;
-import io.gatling.javaapi.jdbc.*;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
-import static io.gatling.javaapi.jdbc.JdbcDsl.*;
 
 public class AceToysSimulation extends Simulation {
 
@@ -23,40 +20,17 @@ public class AceToysSimulation extends Simulation {
 
 
   private ScenarioBuilder scn = scenario("AceToysSimulation")
-    .exec(
-      http("Load Home Page")
-        .get("/")
-              .check(status().is(200))
-              .check(status().not(404), status().not(405))
-              .check(substring("<title>Ace Toys Online Shop</title>"))
-              .check(css("#_csrf","content").saveAs("csrfToken"))
-    )
+    .exec(StaticPages.homePage)
     .pause(2)
-    .exec(
-      http("Load Our Story Page")
-        .get("/our-story")
-              .check(regex("was founded online in \\d{4}"))
-    )
+    .exec(StaticPages.ourStory)
     .pause(2)
-    .exec(
-      http("Load Get in Touch Page")
-        .get("/get-in-touch")
-    )
+    .exec(StaticPages.getInTouch)
     .pause(2)
-    .exec(
-      http("Load Product List Page - Category: All Products}")
-        .get("/category/all")
-    )
+    .exec(Category.productListByCategory_AllProducts)
     .pause(2)
-    .exec(
-      http("Load Next Page of Products - Page 1")
-        .get("/category/all?page=1")
-    )
+    .exec(Category.loadSecondPageOfProducts)
     .pause(2)
-    .exec(
-      http("Load Next Page of Products - Page 2")
-        .get("/category/all?page=2")
-    )
+    .exec(Category.loadThirdPageOfProducts)
     .pause(2)
     .exec(
       http("Load Products Detail Page - Product: Darts Board")
@@ -68,10 +42,7 @@ public class AceToysSimulation extends Simulation {
         .get("/cart/add/19")
     )
     .pause(2)
-    .exec(
-      http("Load Product List Page - Category: Babies Toys")
-        .get("/category/babies-toys")
-    )
+    .exec(Category.productListByCategory_BabiesToys)
     .pause(2)
     .exec(
       http("Add Product to Cart: ProductId: 4")
