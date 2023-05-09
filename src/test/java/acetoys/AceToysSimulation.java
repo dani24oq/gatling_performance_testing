@@ -13,163 +13,107 @@ import static io.gatling.javaapi.jdbc.JdbcDsl.*;
 
 public class AceToysSimulation extends Simulation {
 
+  private static final String DOMAIN = "acetoys.uk";
+
   private HttpProtocolBuilder httpProtocol = http
-    .baseUrl("https://acetoys.uk")
+    .baseUrl("https://" + DOMAIN)
     .inferHtmlResources(AllowList(), DenyList(".*\\.js", ".*\\.css", ".*\\.gif", ".*\\.jpeg", ".*\\.jpg", ".*\\.ico", ".*\\.woff", ".*\\.woff2", ".*\\.(t|o)tf", ".*\\.png", ".*\\.svg", ".*detectportal\\.firefox\\.com.*"))
-    .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate, br")
-    .acceptLanguageHeader("en-US,en;q=0.5")
-    .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36");
-  
-  private Map<CharSequence, String> headers_0 = Map.ofEntries(
-    Map.entry("Sec-Fetch-Dest", "document"),
-    Map.entry("Sec-Fetch-Mode", "navigate"),
-    Map.entry("Sec-Fetch-Site", "same-origin"),
-    Map.entry("Sec-Fetch-User", "?1"),
-    Map.entry("Sec-GPC", "1"),
-    Map.entry("Upgrade-Insecure-Requests", "1"),
-    Map.entry("sec-ch-ua", "Brave\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24"),
-    Map.entry("sec-ch-ua-mobile", "?0"),
-    Map.entry("sec-ch-ua-platform", "Windows")
-  );
-  
-  private Map<CharSequence, String> headers_7 = Map.ofEntries(
-    Map.entry("Accept", "*/*"),
-    Map.entry("Sec-Fetch-Dest", "empty"),
-    Map.entry("Sec-Fetch-Mode", "cors"),
-    Map.entry("Sec-Fetch-Site", "same-origin"),
-    Map.entry("Sec-GPC", "1"),
-    Map.entry("X-Requested-With", "XMLHttpRequest"),
-    Map.entry("sec-ch-ua", "Brave\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24"),
-    Map.entry("sec-ch-ua-mobile", "?0"),
-    Map.entry("sec-ch-ua-platform", "Windows")
-  );
-  
-  private Map<CharSequence, String> headers_12 = Map.ofEntries(
-    Map.entry("Cache-Control", "max-age=0"),
-    Map.entry("Origin", "https://acetoys.uk"),
-    Map.entry("Sec-Fetch-Dest", "document"),
-    Map.entry("Sec-Fetch-Mode", "navigate"),
-    Map.entry("Sec-Fetch-Site", "same-origin"),
-    Map.entry("Sec-Fetch-User", "?1"),
-    Map.entry("Sec-GPC", "1"),
-    Map.entry("Upgrade-Insecure-Requests", "1"),
-    Map.entry("sec-ch-ua", "Brave\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24"),
-    Map.entry("sec-ch-ua-mobile", "?0"),
-    Map.entry("sec-ch-ua-platform", "Windows")
-  );
+    .acceptLanguageHeader("en-US,en;q=0.5");
 
 
   private ScenarioBuilder scn = scenario("AceToysSimulation")
     .exec(
-      http("AceToysSimulation_0:GET_https://acetoys.uk/")
+      http("Load Home Page")
         .get("/")
-        .headers(headers_0)
     )
-    .pause(5)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_1:GET_https://acetoys.uk/our-story")
+      http("Load Our Story Page")
         .get("/our-story")
-        .headers(headers_0)
     )
-    .pause(3)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_2:GET_https://acetoys.uk/get-in-touch")
+      http("Load Get in Touch Page")
         .get("/get-in-touch")
-        .headers(headers_0)
     )
-    .pause(7)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_3:GET_https://acetoys.uk/category/all")
+      http("Load Product List Page - Category: All Products}")
         .get("/category/all")
-        .headers(headers_0)
     )
-    .pause(6)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_4:GET_https://acetoys.uk/category/all?page=1")
+      http("Load Next Page of Products - Page 1")
         .get("/category/all?page=1")
-        .headers(headers_0)
     )
-    .pause(3)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_5:GET_https://acetoys.uk/category/all?page=2")
+      http("Load Next Page of Products - Page 2")
         .get("/category/all?page=2")
-        .headers(headers_0)
     )
-    .pause(5)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_6:GET_https://acetoys.uk/product/darts-board")
+      http("Load Products Detail Page - Product: Darts Board")
         .get("/product/darts-board")
-        .headers(headers_0)
     )
-    .pause(5)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_7:GET_https://acetoys.uk/cart/add/19")
+      http("Add Product to Cart: ProductId: 19")
         .get("/cart/add/19")
-        .headers(headers_7)
     )
-    .pause(6)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_8:GET_https://acetoys.uk/category/babies-toys")
+      http("Load Product List Page - Category: Babies Toys")
         .get("/category/babies-toys")
-        .headers(headers_0)
     )
-    .pause(34)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_9:GET_https://acetoys.uk/cart/add/4")
+      http("Add Product to Cart: ProductId: 4")
         .get("/cart/add/4")
-        .headers(headers_7)
     )
-    .pause(1)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_10:GET_https://acetoys.uk/cart/add/4")
+      http("Add Product to Cart: ProductId: 4")
         .get("/cart/add/4")
-        .headers(headers_7)
     )
-    .pause(10)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_11:GET_https://acetoys.uk/cart/view")
+      http("View Cart")
         .get("/cart/view")
-        .headers(headers_0)
     )
-    .pause(10)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_12:POST_https://acetoys.uk/login")
+      http("Login User")
         .post("/login")
-        .headers(headers_12)
         .formParam("_csrf", "8fd3fbe6-c0e7-492a-98e2-eab06a45cbd6")
         .formParam("username", "user1")
         .formParam("password", "pass")
     )
-    .pause(6)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_13:GET_https://acetoys.uk/cart/add/19?cartPage=true")
+      http("Increase Product Quantity in Cart - Product Id: 19")
         .get("/cart/add/19?cartPage=true")
-        .headers(headers_0)
-    )
-    .pause(4)
-    .exec(
-      http("AceToysSimulation_14:GET_https://acetoys.uk/cart/add/19?cartPage=true")
-        .get("/cart/add/19?cartPage=true")
-        .headers(headers_0)
     )
     .pause(2)
     .exec(
-      http("AceToysSimulation_15:GET_https://acetoys.uk/cart/subtract/19")
+      http("Increase Product Quantity in Cart - Product Id: 19")
+        .get("/cart/add/19?cartPage=true")
+    )
+    .pause(2)
+    .exec(
+      http("Subtract Product Quantity in Cart - Product Id: 19")
         .get("/cart/subtract/19")
-        .headers(headers_0)
     )
-    .pause(12)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_16:GET_https://acetoys.uk/cart/checkout")
+      http("Checkout")
         .get("/cart/checkout")
-        .headers(headers_0)
     )
-    .pause(6)
+    .pause(2)
     .exec(
-      http("AceToysSimulation_17:POST_https://acetoys.uk/logout")
+      http("Logout")
         .post("/logout")
-        .headers(headers_12)
         .formParam("_csrf", "11ecf7ec-5d64-4c1a-8825-eb81aafadb13")
     );
 
