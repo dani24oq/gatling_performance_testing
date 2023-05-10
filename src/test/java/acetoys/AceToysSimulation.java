@@ -1,7 +1,6 @@
 package acetoys;
 
-import acetoys.pageobjects.Category;
-import acetoys.pageobjects.StaticPages;
+import acetoys.pageobjects.*;
 import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.*;
 
@@ -32,68 +31,29 @@ public class AceToysSimulation extends Simulation {
     .pause(2)
     .exec(Category.loadThirdPageOfProducts)
     .pause(2)
-    .exec(
-      http("Load Products Detail Page - Product: Darts Board")
-        .get("/product/darts-board")
-    )
+    .exec(Product.loadProductDetailPage_DartBoards)
     .pause(2)
-    .exec(
-      http("Add Product to Cart: ProductId: 19")
-        .get("/cart/add/19")
-    )
+    .exec(Product.addProductToCart_Product19)
     .pause(2)
     .exec(Category.productListByCategory_BabiesToys)
     .pause(2)
-    .exec(
-      http("Add Product to Cart: ProductId: 4")
-        .get("/cart/add/4")
-    )
+    .exec(Product.addProductToCart_Product4)
     .pause(2)
-    .exec(
-      http("Add Product to Cart: ProductId: 4")
-        .get("/cart/add/4")
-    )
+    .exec(Product.addProductToCart_Product5)
     .pause(2)
-    .exec(
-      http("View Cart")
-        .get("/cart/view")
-    )
+    .exec(Cart.viewCart)
     .pause(2)
-    .exec(
-      http("Login User")
-        .post("/login")
-        .formParam("_csrf", "#{csrfToken}")
-        .formParam("username", "user1")
-        .formParam("password", "pass")
-              .check(css("#_csrf","content").saveAs("csrfLogInToken"))
-    )
+    .exec(Customer.login)
     .pause(2)
-    .exec(
-      http("Increase Product Quantity in Cart - Product Id: 19")
-        .get("/cart/add/19?cartPage=true")
-    )
+    .exec(Cart.increaseQuantityInCart)
     .pause(2)
-    .exec(
-      http("Increase Product Quantity in Cart - Product Id: 19")
-        .get("/cart/add/19?cartPage=true")
-    )
+    .exec(Cart.increaseQuantityInCart)
     .pause(2)
-    .exec(
-      http("Subtract Product Quantity in Cart - Product Id: 19")
-        .get("/cart/subtract/19")
-    )
+    .exec(Cart.decreaseQuantityInCart)
     .pause(2)
-    .exec(
-      http("Checkout")
-        .get("/cart/checkout")
-              .check(substring("Your products are on their way to you now!!"))
-    )
+    .exec(Cart.checkOut)
     .pause(2)
-    .exec(
-      http("Logout")
-        .post("/logout")
-        .formParam("_csrf", "#{csrfLogInToken}")
-    );
+    .exec(Customer.logout);
 
   {
 	  setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
