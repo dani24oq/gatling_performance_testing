@@ -7,30 +7,27 @@ import static io.gatling.javaapi.http.HttpDsl.*;
 
 public class Category {
 
-    public static ChainBuilder productListByCategory_AllProducts =
-            exec(
-                    http("Load Product List Page - Category: All Products")
-                            .get("/category/all")
-                            .check(css("#CategoryName").is("All Products"))
-            );
+    private static final FeederBuilder<String> categoryFeeder =
+            csv("data/categoryDetails.csv").circular();
 
-    public static ChainBuilder productListByCategory_BabiesToys =
-            exec(
-                    http("Load Product List Page - Category: Babies Toys")
-                            .get("/category/babies-toys")
-                            .check(css("#CategoryName").is("Babies Toys"))
-            );
+    public static ChainBuilder productListByCategory =
+            feed(categoryFeeder)
+                    .exec(
+                            http("Load Products List Page - Category: #{categoryName}")
+                                    .get("/category/#{categorySlug}")
+                                    .check(css("#CategoryName").isEL("#{categoryName}"))
+                    );
 
     public static ChainBuilder loadSecondPageOfProducts =
             exec(
-                    http("Load Second Page of Products")
+                    http("Load second page of products")
                             .get("/category/all?page=1")
                             .check(css(".page-item.active").is("2"))
             );
 
     public static ChainBuilder loadThirdPageOfProducts =
             exec(
-                    http("Load Third Page of Products")
+                    http("Load third page of products")
                             .get("/category/all?page=2")
                             .check(css(".page-item.active").is("3"))
             );
