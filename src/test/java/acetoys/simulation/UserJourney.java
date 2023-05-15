@@ -2,13 +2,11 @@ package acetoys.simulation;
 
 import acetoys.pageobjects.*;
 import acetoys.session.UserSession;
-import io.gatling.core.pause.Custom;
 import io.gatling.javaapi.core.*;
 
 import java.time.Duration;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
-import static io.gatling.javaapi.http.HttpDsl.*;
 
 public class UserJourney {
     private static final Duration SHORT_PAUSE = Duration.ofMillis(1000);
