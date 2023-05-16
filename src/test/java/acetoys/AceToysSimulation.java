@@ -8,7 +8,7 @@ import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
 public class AceToysSimulation extends Simulation {
-    private static final String TEST_TYPE = System.getProperty("TEST_TYPE", "INSTANT_USERS");
+    private static final String TEST_TYPE = System.getenv("TEST_TYPE"); //Use getenv to use Runtime Parameters in Jenkins
 
   private static final String DOMAIN = "acetoys.uk";
 
