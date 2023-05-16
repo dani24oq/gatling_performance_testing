@@ -21,7 +21,12 @@ public class AceToysSimulation extends Simulation {
 
   {
 	  if (TEST_TYPE.equals("INSTANT_USERS")){
-          setUp(TestPopulation.instantUsers).protocols(httpProtocol);
+          setUp(TestPopulation.instantUsers).protocols(httpProtocol)
+                  .assertions(
+                          global().responseTime().mean().lt(3),
+                          global().successfulRequests().percent().gt(99.0),
+                          forAll().responseTime().max().lt(5)
+                  );
       } else if (TEST_TYPE.equals("RAMP_USERS")) {
           setUp(TestPopulation.rampUsers).protocols(httpProtocol);
       } else if (TEST_TYPE.equals("COMPLEX_INJECTION")) {
@@ -29,7 +34,11 @@ public class AceToysSimulation extends Simulation {
       } else if (TEST_TYPE.equals("CLOSED_MODEL")) {
           setUp(TestPopulation.closedModel).protocols(httpProtocol);
       } else {
-          setUp(TestPopulation.instantUsers).protocols(httpProtocol);
+          setUp(TestPopulation.instantUsers).protocols(httpProtocol)
+                  .assertions(
+                          global().responseTime().mean().lt(3),
+                          global().successfulRequests().percent().gt(99.0),
+                          forAll().responseTime().max().lt(5));
       }
   }
 }
